@@ -114,7 +114,7 @@ try {
 
 
 
-      });
+      };
     } catch (err) {
         console.log(err);
        await fs.emptyDirSync(__dirname+'/auth_info_baileys'); 
