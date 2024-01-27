@@ -20,20 +20,12 @@ const MESSAGE = process.env.MESSAGE ||  `
 ╭── ⋅ ⋅ ─
 ║  『••• 𝗩𝗶𝘀𝗶𝘁 𝗙𝗼𝗿 𝗛𝗲𝗹𝗽 •••』
 ║*Owner:* _https://wa.me/2347039570336_
+║*GROUP 1:* _https://chat.whatsapp.com/HxVuy25MtqoFOsYuyxBx0G_
+║*Group 2:* _https://chat.whatsapp.com/FdbSxW6Gr4zI4Phe846r2Q_
 ║ *Note :*_Don't provide your SESSION_ID to_
 ║ _anyone otherwise that can access chats_
 ╰── ⋅ ⋅ ── ✩ ── ⋅ ⋅ ──╯
 `
-
-
-
-
-
-
-
-
-
-
 
 if (fs.existsSync('./auth_info_baileys')) {
     fs.emptyDirSync(__dirname + '/auth_info_baileys');
@@ -46,22 +38,22 @@ if (fs.existsSync('./auth_info_baileys')) {
   async function IZUKU() {
     const { state, saveCreds } = await useMultiFileAuthState(__dirname + '/auth_info_baileys')
     try {
-      let ex =IzukuWASocket({ 
+        let cnd =IzukuWASocket({ 
         printQRInTerminal: false,
         logger: pino({ level: "silent" }), 
-        browser: Browsers.baileys("Desktop"),
+        browser: Browsers.macOS("Desktop"),
         auth: state 
         });
 
 
-      ex.ev.on("connection.update", async (s) => {
+      cnd.ev.on("connection.update", async (s) => {
         const { connection, lastDisconnect, qr } = s;
         if (qr) { res.end(await toBuffer(qr)); }
 
 
         if (connection == "open"){
           await delay(3000);
-          let user = Smd.user.id;
+          let user = cnd.user.id;
 
 
 //===========================================================================================
@@ -78,17 +70,15 @@ SESSION-ID ==> ${Scan_Id}
 `)
 
 
-          let msgsss = await ex.sendMessage(user, { text: `IZUKU;;; ${Scan_Id}` });
-await ex.sendMessage(user, { text: MESSAGE }, { quoted: msgsss });
-await delay(1000);
-try {
-    await fs.emptyDirSync(__dirname + '/auth_info_baileys');
-} catch (e) {}
+          let msgsss = await cnd.sendMessage(user, { text:  IZUKU;;; Scan_Id });
+          await cnd.sendMessage(user, { text: MESSAGE } , { quoted : msgsss });
+          await delay(1000);
+          try{ await fs.emptyDirSync(__dirname+'/auth_info_baileys'); }catch(e){}
 
 
-        
+        }
 
-        ex.ev.on('creds.update', saveCreds)
+        cnd.ev.on('creds.update', saveCreds)
 
         if (connection === "close") {            
             let reason = new Boom(lastDisconnect?.error)?.output.statusCode
@@ -114,7 +104,7 @@ try {
 
 
 
-      };
+      });
     } catch (err) {
         console.log(err);
        await fs.emptyDirSync(__dirname+'/auth_info_baileys'); 
