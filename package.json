@@ -12,7 +12,7 @@
     "license": "MIT",
     "dependencies": {
       "@hapi/boom": "^10.0.1",
-      "@sampandey/baileys": "latest",
+      "@sampandey001/baileys": "latest",
       "fs-extra": "latest",
       "pino": "^8.1.0",
       "express": "^4.18.2",
