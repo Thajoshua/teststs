@@ -70,10 +70,12 @@ SESSION-ID ==> ${Scan_Id}
 `)
 
 
-          let msgsss = await cnd.sendMessage(user, { text:  IZUKU;;; Scan_Id });
-          await cnd.sendMessage(user, { text: MESSAGE } , { quoted : msgsss });
-          await delay(1000);
-          try{ await fs.emptyDirSync(__dirname+'/auth_info_baileys'); }catch(e){}
+         let msgsss = await cnd.sendMessage(user, { text: `IZUKU;;; ${Scan_Id}` });
+await cnd.sendMessage(user, { text: MESSAGE }, { quoted: msgsss });
+await delay(1000);
+try { 
+    await fs.emptyDirSync(__dirname + '/auth_info_baileys'); 
+} catch (e) {}
 
 
         }
