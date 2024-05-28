@@ -68,6 +68,11 @@
             document.getElementById('status').innerText = 'Connection closed';
         };
 
+        ws.onerror = (error) => {
+            document.getElementById('status').innerText = 'Connection error';
+            console.error('WebSocket Error:', error);
+        };
+
         ws.onopen = () => {
             document.getElementById('loading').classList.remove('d-none');
             document.getElementById('qr').classList.add('d-none');
