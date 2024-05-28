@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .qr-code {
+            width: 200px;
+            height: 200px;
+        }
+        .message {
+            margin-top: 20px;
+            font-size: 1.2em;
+            color: #333;
+        }
+        .spinner-border {
+            width: 3rem;
+            height: 3rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="loading" class="spinner-border text-primary" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+        <img id="qr" class="qr-code d-none" src="" alt="QR Code" />
+        <div id="status" class="message">Waiting for QR code...</div>
+    </div>
+
+    <script>
+        const protocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+        const ws = new WebSocket(`${protocol}//${location.host}`);
+
+        ws.onmessage = (event) => {
+            const message = JSON.parse(event.data);
+            if (message.type === 'qr') {
+                document.getElementById('loading').classList.add('d-none');
+                document.getElementById('qr').src = `data:image/png;base64,${message.data}`;
+                document.getElementById('qr').classList.remove('d-none');
+                document.getElementById('status').innerText = 'Please scan the QR code to connect';
+            } else if (message.type === 'status') {
+                document.getElementById('status').innerText = message.data;
+            }
+        };
+
+        ws.onclose = () => {
+            document.getElementById('loading').classList.add('d-none');
+            document.getElementById('qr').classList.add('d-none');
+            document.getElementById('status').innerText = 'Connection closed';
+        };
+
+        ws.onopen = () => {
+            document.getElementById('loading').classList.remove('d-none');
+            document.getElementById('qr').classList.add('d-none');
+            document.getElementById('status').innerText = 'Waiting for QR code...';
+        };
+    </script>
+</body>
+</html>
