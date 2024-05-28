@@ -35,6 +35,11 @@
             width: 3rem;
             height: 3rem;
         }
+        .countdown {
+            margin-top: 10px;
+            font-size: 1.1em;
+            color: #ff0000;
+        }
     </style>
 </head>
 <body>
@@ -44,11 +49,13 @@
         </div>
         <img id="qr" class="qr-code d-none" src="" alt="QR Code" />
         <div id="status" class="message">Waiting for QR code...</div>
+        <div id="countdown" class="countdown d-none">Time remaining: <span id="timer">30</span> seconds</div>
     </div>
 
     <script>
         const protocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
         const ws = new WebSocket(`${protocol}//${location.host}`);
+        let countdownInterval;
 
         ws.onmessage = (event) => {
             const message = JSON.parse(event.data);
@@ -57,14 +64,17 @@
                 document.getElementById('qr').src = `data:image/png;base64,${message.data}`;
                 document.getElementById('qr').classList.remove('d-none');
                 document.getElementById('status').innerText = 'Please scan the QR code to connect';
+                startCountdown(30);  // Start the countdown from 30 seconds
             } else if (message.type === 'status') {
                 document.getElementById('status').innerText = message.data;
             }
         };
 
         ws.onclose = () => {
+            clearInterval(countdownInterval);
             document.getElementById('loading').classList.add('d-none');
             document.getElementById('qr').classList.add('d-none');
+            document.getElementById('countdown').classList.add('d-none');
             document.getElementById('status').innerText = 'Connection closed';
         };
 
@@ -73,6 +83,23 @@
             document.getElementById('qr').classList.add('d-none');
             document.getElementById('status').innerText = 'Waiting for QR code...';
         };
+
+        function startCountdown(seconds) {
+            const countdownElement = document.getElementById('timer');
+            document.getElementById('countdown').classList.remove('d-none');
+            countdownElement.innerText = seconds;
+            
+            countdownInterval = setInterval(() => {
+                seconds--;
+                countdownElement.innerText = seconds;
+                if (seconds <= 0) {
+                    clearInterval(countdownInterval);
+                    document.getElementById('status').innerText = 'QR code expired. Please refresh to get a new code.';
+                    document.getElementById('qr').classList.add('d-none');
+                    document.getElementById('countdown').classList.add('d-none');
+                }
+            }, 1000);
+        }
     </script>
 </body>
 </html>
