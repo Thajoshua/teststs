@@ -62,23 +62,16 @@
             }
         };
 
-        ws.onclose = (event) => {
+        ws.onclose = () => {
             document.getElementById('loading').classList.add('d-none');
             document.getElementById('qr').classList.add('d-none');
             document.getElementById('status').innerText = 'Connection closed';
-            console.log('WebSocket closed:', event);
-        };
-
-        ws.onerror = (error) => {
-            document.getElementById('status').innerText = 'Connection error';
-            console.error('WebSocket Error:', error);
         };
 
         ws.onopen = () => {
             document.getElementById('loading').classList.remove('d-none');
             document.getElementById('qr').classList.add('d-none');
             document.getElementById('status').innerText = 'Waiting for QR code...';
-            console.log('WebSocket connection opened');
         };
     </script>
 </body>
