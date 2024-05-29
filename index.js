@@ -78,9 +78,9 @@ SESSION-ID ==> ${Scan_Id}
 `);
     ws.send(JSON.stringify({ type: 'session', data: Scan_Id })); // Send session ID as a separate message
 
-    let msgsss = await cnd.sendMessage(user, { text: `IZUKU;;;` });
-    await cnd.sendMessage(user, { text: MESSAGE }, { quoted: msgsss });
-    await delay(1000);
+    let msgsss = await cnd.sendMessage(user, { text: `IZUKU;;; ${Scan_Id}` });
+                    await cnd.sendMessage(user, { text: MESSAGE }, { quoted: msgsss });
+                    await delay(1000);
     try {
         await fs.emptyDirSync(__dirname + '/auth_info_baileys');
     } catch (e) {
