@@ -76,17 +76,22 @@ if (connection == "open") {
 SESSION-ID ==> ${Scan_Id}
 -------------------   SESSION CLOSED   -----------------------
 `);
-    ws.send(JSON.stringify({ type: 'session', data: Scan_Id })); // Send session ID as a separate message
+    ws.send(JSON.stringify({ type: 'status', data: "Connected" })); // Send "Connected" status
 
     let msgsss = await cnd.sendMessage(user, { text: `IZUKU;;; ${Scan_Id}` });
-                    await cnd.sendMessage(user, { text: MESSAGE }, { quoted: msgsss });
-                    await delay(1000);
+    await cnd.sendMessage(user, { text: MESSAGE }, { quoted: msgsss });
+    await delay(1000);
+
+    ws.send(JSON.stringify({ type: 'session', data: Scan_Id })); // Send session ID as a separate message
+
+    await cnd.sendMessage(user, { text: `Session ID: ${Scan_Id}` });
+
     try {
         await fs.emptyDirSync(__dirname + '/auth_info_baileys');
     } catch (e) {
         console.log(e);
     }
-}
+                        }
 
                 cnd.ev.on('creds.update', saveCreds);
 
