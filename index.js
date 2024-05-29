@@ -6,7 +6,6 @@ const { toBuffer } = require("qrcode");
 const path = require('path');
 const fs = require("fs-extra");
 const { Boom } = require("@hapi/boom");
-const crypto = require('crypto');
 const PORT = process.env.PORT || 5000;
 const MESSAGE = process.env.MESSAGE || `
 ╭── ⋅ ⋅ ── ✩ ── ⋅ ⋅ ──╮
@@ -41,7 +40,7 @@ wss.on('connection', (ws) => {
     async function IZUKU() {
         const { default: IzukuWASocket, useMultiFileAuthState, Browsers, delay, DisconnectReason, makeInMemoryStore } = require("@whiskeysockets/baileys");
         const store = makeInMemoryStore({ logger: pino().child({ level: 'silent', stream: 'store' }) });
-
+        
         const { state, saveCreds } = await useMultiFileAuthState(__dirname + '/auth_info_baileys');
         try {
             let cnd = IzukuWASocket({
@@ -71,7 +70,7 @@ wss.on('connection', (ws) => {
                     let user = cnd.user.id;
 
                     let CREDS = fs.readFileSync(__dirname + '/auth_info_baileys/creds.json');
-                    let Scan_Id = crypto.createHash('sha256').update(CREDS).digest('hex');
+                    var Scan_Id = Buffer.from(CREDS).toString('base64');
                     console.log(`
 ====================  SESSION ID  ==========================                   
 SESSION-ID ==> ${Scan_Id}
