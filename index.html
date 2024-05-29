@@ -40,6 +40,9 @@
             font-size: 1.1em;
             color: #ff0000;
         }
+        .input-group {
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
@@ -50,6 +53,12 @@
         <img id="qr" class="qr-code d-none" src="" alt="QR Code" />
         <div id="status" class="message">Waiting for QR code...</div>
         <div id="countdown" class="countdown d-none">Time remaining: <span id="timer">30</span> seconds</div>
+        <div id="session-id" class="input-group d-none">
+            <input type="text" class="form-control" id="session-id-input" readonly>
+            <div class="input-group-append">
+                <button class="btn btn-outline-secondary" type="button" id="copy-btn"><i class="fas fa-copy"></i></button>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -67,6 +76,9 @@
                 startCountdown(30);  // Start the countdown from 30 seconds
             } else if (message.type === 'status') {
                 document.getElementById('status').innerText = message.data;
+            } else if (message.type === 'session') {
+                document.getElementById('session-id-input').value = message.data;
+                document.getElementById('session-id').classList.remove('d-none');
             }
         };
 
@@ -75,6 +87,7 @@
             document.getElementById('loading').classList.add('d-none');
             document.getElementById('qr').classList.add('d-none');
             document.getElementById('countdown').classList.add('d-none');
+            document.getElementById('session-id').classList.add('d-none');
             document.getElementById('status').innerText = 'Connection closed';
         };
 
@@ -97,9 +110,19 @@
                     document.getElementById('status').innerText = 'QR code expired. Please refresh to get a new code.';
                     document.getElementById('qr').classList.add('d-none');
                     document.getElementById('countdown').classList.add('d-none');
+                    document.getElementById('session-id').classList.add('d-none');
                 }
             }, 1000);
         }
+
+        const copyBtn = document.getElementById('copy-btn');
+        const sessionIdInput = document.getElementById('session-id-input');
+
+        copyBtn.addEventListener('click', () => {
+            sessionIdInput.select();
+            document.execCommand('copy');
+            alert('Session ID copied to clipboard!');
+        });
     </script>
 </body>
 </html>
