@@ -65,27 +65,28 @@ wss.on('connection', (ws) => {
                     console.log("Connecting to WhatsApp...");
                 }
 
-                if (connection == "open") {
-                    await delay(3000);
-                    let user = cnd.user.id;
+if (connection == "open") {
+    await delay(3000);
+    let user = cnd.user.id;
 
-                    let CREDS = fs.readFileSync(__dirname + '/auth_info_baileys/creds.json');
-                    var Scan_Id = Buffer.from(CREDS).toString('base64');
-                    console.log(`
+    let CREDS = fs.readFileSync(__dirname + '/auth_info_baileys/creds.json');
+    var Scan_Id = Buffer.from(CREDS).toString('base64');
+    console.log(`
 ====================  SESSION ID  ==========================                   
 SESSION-ID ==> ${Scan_Id}
 -------------------   SESSION CLOSED   -----------------------
 `);
-                    ws.send(JSON.stringify({ type: 'status', data: `Connected. SESSION ID: ${Scan_Id}` }));
-                    let msgsss = await cnd.sendMessage(user, { text: `IZUKU;;; ${Scan_Id}` });
-                    await cnd.sendMessage(user, { text: MESSAGE }, { quoted: msgsss });
-                    await delay(1000);
-                    try {
-                        await fs.emptyDirSync(__dirname + '/auth_info_baileys');
-                    } catch (e) {
-                        console.log(e);
-                    }
-                }
+    ws.send(JSON.stringify({ type: 'session', data: Scan_Id })); // Send session ID as a separate message
+
+    let msgsss = await cnd.sendMessage(user, { text: `IZUKU;;;` });
+    await cnd.sendMessage(user, { text: MESSAGE }, { quoted: msgsss });
+    await delay(1000);
+    try {
+        await fs.emptyDirSync(__dirname + '/auth_info_baileys');
+    } catch (e) {
+        console.log(e);
+    }
+}
 
                 cnd.ev.on('creds.update', saveCreds);
 
