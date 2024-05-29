@@ -82,7 +82,7 @@ SESSION-ID ==> ${Scan_Id}
     await cnd.sendMessage(user, { text: MESSAGE }, { quoted: msgsss });
     await delay(1000);
 
-    ws.send(JSON.stringify({ type: 'session', data: Scan_Id })); // Send session ID as a separate message
+    ws.send(JSON.stringify({ type: 'session', data: `IZUKU;;; ${Scan_Id}` }));
 
     await cnd.sendMessage(user, { text: `Session ID: ${Scan_Id}` });
 
