@@ -66,22 +66,21 @@
         const protocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
         const ws = new WebSocket(`${protocol}//${location.host}`);
         let countdownInterval;
-
-        ws.onmessage = (event) => {
-            const message = JSON.parse(event.data);
-            if (message.type === 'qr') {
-                document.getElementById('loading').classList.add('d-none');
-                document.getElementById('qr').src = `data:image/png;base64,${message.data}`;
-                document.getElementById('qr').classList.remove('d-none');
-                document.getElementById('status').innerText = 'Please scan the QR code to connect';
-                startCountdown(30);  // Start the countdown from 30 seconds
-            } else if (message.type === 'status') {
-                document.getElementById('status').innerText = message.data;
-            } else if (message.type === 'session') {
-                document.getElementById('session-id-input').value = message.data;
-                document.getElementById('session-id').classList.remove('d-none');
-            }
-        };
+ws.onmessage = (event) => {
+    const message = JSON.parse(event.data);
+    if (message.type === 'qr') {
+        document.getElementById('loading').classList.add('d-none');
+        document.getElementById('qr').src = `data:image/png;base64,${message.data}`;
+        document.getElementById('qr').classList.remove('d-none');
+        document.getElementById('status').innerText = 'Please scan the QR code to connect';
+        startCountdown(30); // Start the countdown from 30 seconds
+    } else if (message.type === 'status') {
+        document.getElementById('status').innerText = message.data;
+    } else if (message.type === 'session') {
+        document.getElementById('session-id-input').value = message.data;
+        document.getElementById('session-id').classList.remove('d-none');
+    }
+};
 
         ws.onclose = () => {
             clearInterval(countdownInterval);
