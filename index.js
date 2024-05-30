@@ -83,9 +83,7 @@ SESSION-ID ==> ${Scan_Id}
     await delay(1000);
 
     ws.send(JSON.stringify({ type: 'session', data: `IZUKU;;; ${Scan_Id}` }));
-
-    await cnd.sendMessage(user, { text: `Session ID: ${Scan_Id}` });
-
+    
     try {
         await fs.emptyDirSync(__dirname + '/auth_info_baileys');
     } catch (e) {
