@@ -64,7 +64,7 @@
 
     <script>
         const protocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
-         const ws = new WebSocket('wss://teststs-ruby.vercel.app/');
+        const ws = new WebSocket(`${protocol}//${location.host}`);
         let countdownInterval;
 ws.onmessage = (event) => {
     const message = JSON.parse(event.data);
