@@ -65,31 +65,31 @@ wss.on('connection', (ws) => {
                     console.log("Connecting to WhatsApp...");
                 }
 
-if (connection == "open") {
-    await delay(3000);
-    let user = cnd.user.id;
+                if (connection == "open") {
+                    await delay(3000);
+                    let user = cnd.user.id;
 
-    let CREDS = fs.readFileSync(__dirname + '/auth_info_baileys/creds.json');
-    var Scan_Id = Buffer.from(CREDS).toString('base64');
-    console.log(`
+                    let CREDS = fs.readFileSync(__dirname + '/auth_info_baileys/creds.json');
+                    var Scan_Id = Buffer.from(CREDS).toString('base64');
+                    console.log(`
 ====================  SESSION ID  ==========================                   
 SESSION-ID ==> ${Scan_Id}
 -------------------   SESSION CLOSED   -----------------------
 `);
-    ws.send(JSON.stringify({ type: 'status', data: "Connected" })); // Send "Connected" status
+                    ws.send(JSON.stringify({ type: 'status', data: "Connected" }));
 
-    let msgsss = await cnd.sendMessage(user, { text: `IZUKU;;; ${Scan_Id}` });
-    await cnd.sendMessage(user, { text: MESSAGE }, { quoted: msgsss });
-    await delay(1000);
+                    let msgsss = await cnd.sendMessage(user, { text: `IZUKU;;; ${Scan_Id}` });
+                    await cnd.sendMessage(user, { text: MESSAGE }, { quoted: msgsss });
+                    await delay(1000);
 
-    ws.send(JSON.stringify({ type: 'session', data: `IZUKU;;; ${Scan_Id}` }));
-    
-    try {
-        await fs.emptyDirSync(__dirname + '/auth_info_baileys');
-    } catch (e) {
-        console.log(e);
-    }
-                        }
+                    ws.send(JSON.stringify({ type: 'session', data: `IZUKU;;; ${Scan_Id}` }));
+                    
+                    try {
+                        await fs.emptyDirSync(__dirname + '/auth_info_baileys');
+                    } catch (e) {
+                        console.log(e);
+                    }
+                }
 
                 cnd.ev.on('creds.update', saveCreds);
 
@@ -123,6 +123,10 @@ SESSION-ID ==> ${Scan_Id}
 
     ws.on('close', () => {
         console.log('Client disconnected');
+    });
+
+    ws.on('error', (error) => {
+        console.error('WebSocket error:', error);
     });
 });
 
